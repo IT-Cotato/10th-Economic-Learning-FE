@@ -10,6 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
   String nativeAppKey = dotenv.env['NATIVE_APP_KEY']!;
+  print('nativeAppKey: $nativeAppKey');
   KakaoSdk.init(nativeAppKey: nativeAppKey);
   runApp(const RippleApp());
 }
@@ -21,7 +22,7 @@ class RippleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Ripple',
-      initialRoute: '/home',
+      initialRoute: '/',
       getPages: UserRouter.getPages(), // 라우트 설정
     );
   }

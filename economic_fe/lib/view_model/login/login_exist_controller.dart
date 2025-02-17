@@ -1,14 +1,10 @@
 import 'package:economic_fe/data/models/level_test/level_test_answer_model.dart';
 import 'package:economic_fe/data/services/remote_data_source.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class LoginExistController extends GetxController {
   // var levelTestAnswers = <LevelTestAnswerModel>[].obs;
@@ -17,56 +13,42 @@ class LoginExistController extends GetxController {
   final String clientId = dotenv.env['CLIENT_ID']!;
   final String redirectUri = dotenv.env['REDIRECT_URI']!;
 
-  void login() async {
-    if (await isKakaoTalkInstalled()) {
-      try {
-        await UserApi.instance.loginWithKakaoTalk();
-        print('카카오톡으로 로그인 성공');
-        User user = await UserApi.instance.me();
-        OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
-        print("토큰${token.accessToken}");
-
-        getlogin(token.accessToken);
-
-        // toArticle();
-      } catch (error) {
-        print('카카오톡으로 로그인 실패 $error');
-
-        if (error is PlatformException && error.code == 'CANCELED') {
-          return;
-        }
-        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
-        try {
-          await UserApi.instance.loginWithKakaoAccount();
-          print('카카오계정으로 로그인 성공');
-        } catch (error) {
-          print('카카오계정으로 로그인 실패 $error');
-        }
+  Future<void> login() async {
+    try {
+      // 카카오톡 또는 계정 로그인
+      OAuthToken token;
+      if (await isKakaoTalkInstalled()) {
+        token = await UserApi.instance.loginWithKakaoTalk();
+      } else {
+        token = await UserApi.instance.loginWithKakaoAccount();
       }
-    } else {
-      try {
-        await UserApi.instance.loginWithKakaoAccount();
-        print('카카오계정으로 로그인 성공');
-      } catch (error) {
-        print('카카오계정으로 로그인 실패 $error');
-      }
+
+      String kakaoAccessToken = token.accessToken;
+      print("카카오 로그인 성공, accessToken: $kakaoAccessToken");
+
+      // 백엔드에 카카오 토큰 전송 후 서버 인증 토큰 받아오기
+      await getlogin(kakaoAccessToken);
+    } catch (error) {
+      print("카카오 로그인 실패: $error");
     }
   }
 
   // 백엔드에서 토큰 받아오기
   Future<void> getlogin(String accessToken) async {
     try {
-      print("start");
+      print("백엔드 로그인 요청 시작");
 
-      dynamic response;
+      dynamic response = await RemoteDataSource.getlogin(accessToken);
 
-      response = await RemoteDataSource.getlogin(accessToken);
-      print("response :::: ${response['results']}");
-      await saveToken("accessToken", response['results']);
-      // String? access = await getToken("accessToken");
-      // print(access);
+      if (response != null && response['results'] != null) {
+        String serverToken = response['results'];
+        await saveToken("accessToken", serverToken);
+        print("백엔드 인증 성공, 저장된 accessToken: $serverToken");
+      } else {
+        print("백엔드 인증 실패: 응답 데이터 없음");
+      }
     } catch (e) {
-      debugPrint("Error : $e");
+      debugPrint("백엔드 로그인 요청 실패: $e");
     }
   }
 
