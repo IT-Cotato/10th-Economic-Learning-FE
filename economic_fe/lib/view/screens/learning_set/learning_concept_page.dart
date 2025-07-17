@@ -67,6 +67,7 @@ class _LearningConceptPageState extends State<LearningConceptPage> {
               child: SizedBox(
                 height: MediaQuery.of(context).size.height, // 화면 높이의 90%,
                 child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
                   child: Center(
                     child: Container(
                       padding: EdgeInsets.only(top: 18.h),
@@ -205,6 +206,9 @@ class _LearningConceptPageState extends State<LearningConceptPage> {
                                     explanation: concept["explanation"]),
                               ],
                             ),
+                          ),
+                          SizedBox(
+                            height: 50.h,
                           ),
                         ],
                       ),
