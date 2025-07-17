@@ -25,6 +25,7 @@ class _LevelSelectPageState extends State<LevelSelectPage> {
     controller = Get.put(LevelSelectController()
       ..conceptName.value = args["name"] ?? "개념 학습"
       ..learningSetId.value = args["learningSetId"] ?? 0
+      ..mode.value = args["mode"] ?? "quiz"
       ..getStats());
   }
 
@@ -53,11 +54,20 @@ class _LevelSelectPageState extends State<LevelSelectPage> {
                       setState(() {
                         _selectedLevel = 'BEGINNER';
                         controller.selectedLevel = _selectedLevel;
-                        controller.clickedQuizBtn(
-                            context,
-                            controller.learningSetId.value,
-                            controller.conceptName.value,
-                            _selectedLevel);
+
+                        if (controller.mode.value == 'quiz') {
+                          controller.clickedQuizBtn(
+                              context,
+                              controller.learningSetId.value,
+                              controller.conceptName.value,
+                              _selectedLevel);
+                        } else {
+                          controller.clickedConceptBtn(
+                              context,
+                              controller.learningSetId.value,
+                              controller.conceptName.value,
+                              _selectedLevel);
+                        }
                       });
                     },
                     isCompleted:
@@ -71,11 +81,20 @@ class _LevelSelectPageState extends State<LevelSelectPage> {
                       setState(() {
                         _selectedLevel = 'INTERMEDIATE';
                         controller.selectedLevel = _selectedLevel;
-                        controller.clickedQuizBtn(
-                            context,
-                            controller.learningSetId.value,
-                            controller.conceptName.value,
-                            _selectedLevel);
+
+                        if (controller.mode.value == 'quiz') {
+                          controller.clickedQuizBtn(
+                              context,
+                              controller.learningSetId.value,
+                              controller.conceptName.value,
+                              _selectedLevel);
+                        } else {
+                          controller.clickedConceptBtn(
+                              context,
+                              controller.learningSetId.value,
+                              controller.conceptName.value,
+                              _selectedLevel);
+                        }
                       });
                     },
                     isCompleted:
@@ -89,11 +108,20 @@ class _LevelSelectPageState extends State<LevelSelectPage> {
                       setState(() {
                         _selectedLevel = 'ADVANCED';
                         controller.selectedLevel = _selectedLevel;
-                        controller.clickedQuizBtn(
-                            context,
-                            controller.learningSetId.value,
-                            controller.conceptName.value,
-                            _selectedLevel);
+
+                        if (controller.mode.value == 'quiz') {
+                          controller.clickedQuizBtn(
+                              context,
+                              controller.learningSetId.value,
+                              controller.conceptName.value,
+                              _selectedLevel);
+                        } else {
+                          controller.clickedConceptBtn(
+                              context,
+                              controller.learningSetId.value,
+                              controller.conceptName.value,
+                              _selectedLevel);
+                        }
                       });
                     },
                     isCompleted:
@@ -142,12 +170,16 @@ class _LevelSelectPageState extends State<LevelSelectPage> {
                 letterSpacing: -0.50,
               ),
             ),
-            Icon(
-              isCompleted ? Icons.check_circle : Icons.check_circle_outline,
-              color: isCompleted
-                  ? Palette.buttonColorGreen
-                  : const Color(0xffa2a2a2),
-            )
+            controller.mode.value == 'quiz'
+                ? Icon(
+                    isCompleted
+                        ? Icons.check_circle
+                        : Icons.check_circle_outline,
+                    color: isCompleted
+                        ? Palette.buttonColorGreen
+                        : const Color(0xffa2a2a2),
+                  )
+                : const SizedBox(), // concept 모드일 경우 아이콘 숨김
           ],
         ),
       ),

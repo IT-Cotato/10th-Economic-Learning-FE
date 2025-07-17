@@ -88,7 +88,7 @@ class QuizTestController extends GetxController {
           await remoteDataSource.postQuizFinish(learningSetId, level);
 
       print("response quizFinish isSuccess : ${response['isSuccess']}");
-      // Get.offNamed('/learning_list/quiz_level');
+      // Get.offNamed('/learning_list/level_select');
     } catch (e) {
       debugPrint('post quizFinish Error: $e');
     }

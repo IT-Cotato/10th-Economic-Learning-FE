@@ -24,21 +24,15 @@ class LearningConceptController extends GetxController {
   void onInit() {
     super.onInit();
 
-    print("Get.arguments: ${Get.arguments}"); // 전달된 arguments 확인
+    final args = Get.arguments ?? {};
+    learningSetId.value = args["learningSetId"] ?? 0;
+    conceptName.value = args["name"] ?? "개념 학습";
 
-    // Get.arguments가 null인지 확인 후 학습 세트 ID와 개념 이름 가져오기
-    if (Get.arguments != null) {
-      learningSetId.value = Get.arguments?["learningSetId"] ?? 0;
-      conceptName.value = Get.arguments?["name"] ?? "개념 학습";
-    } else {
-      learningSetId.value = 0;
-      conceptName.value = "개념 학습"; // 기본값 설정
-    }
+    // level 문자열 값 받아서 index로 변환
+    final levelStr = args["level"] ?? "BEGINNER";
+    selectedLevelIndex.value = apiLevelOptions.indexOf(levelStr);
 
-    // 기본 레벨은 "초급"으로 설정
-    selectedLevelIndex.value = 0;
-
-    // 개념 학습 데이터 불러오기 + 스크랩된 목록 불러오기
+    // 개념 학습 & 스크랩 데이터 로드
     fetchLearningConcepts();
     fetchScrapConcepts();
   }

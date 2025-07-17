@@ -80,10 +80,11 @@ class LearningListController extends GetxController {
 
   void clickedLearningConcept(int learningSetId, String name) {
     Get.toNamed(
-      '/learning_list/learning_concept',
+      '/learning_list/level_select',
       arguments: {
         "learningSetId": learningSetId,
         "name": name,
+        "mode": "concept",
       },
     );
   }
@@ -92,10 +93,11 @@ class LearningListController extends GetxController {
     Get.delete<QuizTestController>();
     Get.delete<LevelSelectController>();
     Get.toNamed(
-      '/learning_list/quiz_level',
+      '/learning_list/level_select',
       arguments: {
         "learningSetId": learningSetId,
         "name": name,
+        "mode": "quiz",
       },
     );
   }
