@@ -67,6 +67,7 @@ class _LearningConceptPageState extends State<LearningConceptPage> {
               child: SizedBox(
                 height: MediaQuery.of(context).size.height, // 화면 높이의 90%,
                 child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
                   child: Center(
                     child: Container(
                       padding: EdgeInsets.only(top: 18.h),
@@ -103,117 +104,6 @@ class _LearningConceptPageState extends State<LearningConceptPage> {
                                       height: 1.4,
                                       letterSpacing: -0.4,
                                     ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      backgroundColor: Colors.white,
-                                      builder: (BuildContext context) {
-                                        return StatefulBuilder(
-                                          builder: (BuildContext context,
-                                              StateSetter setState) {
-                                            return Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.8,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 16.w,
-                                                  vertical: 16.h),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        "카테고리",
-                                                        style: TextStyle(
-                                                            fontSize: 18.sp,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        icon: const Icon(
-                                                            Icons.close),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 16.h),
-                                                  Expanded(
-                                                    child: ListView.builder(
-                                                      itemCount: controller
-                                                          .levelOptions.length,
-                                                      itemBuilder:
-                                                          (BuildContext context,
-                                                              int index) {
-                                                        return ListTile(
-                                                          contentPadding:
-                                                              EdgeInsets.zero,
-                                                          title: Text(
-                                                            controller
-                                                                    .levelOptions[
-                                                                index],
-                                                            style: TextStyle(
-                                                              fontSize: 16.sp,
-                                                              color: controller
-                                                                          .selectedLevelIndex ==
-                                                                      index
-                                                                  ? const Color(
-                                                                      0xFF2BD6D6)
-                                                                  : Colors
-                                                                      .black,
-                                                              fontWeight: controller
-                                                                          .selectedLevelIndex ==
-                                                                      index
-                                                                  ? FontWeight
-                                                                      .bold
-                                                                  : FontWeight
-                                                                      .normal,
-                                                            ),
-                                                          ),
-                                                          trailing: controller
-                                                                      .selectedLevelIndex ==
-                                                                  index
-                                                              ? Image.asset(
-                                                                  'assets/check_fill.png', // 이미지 경로
-                                                                  width: 24.w,
-                                                                  height: 24.h,
-                                                                )
-                                                              : null,
-                                                          onTap: () {
-                                                            controller
-                                                                .changeLevel(
-                                                                    index);
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: Colors.white,
-                                    size: 24.w,
                                   ),
                                 ),
                               ],
@@ -316,6 +206,9 @@ class _LearningConceptPageState extends State<LearningConceptPage> {
                                     explanation: concept["explanation"]),
                               ],
                             ),
+                          ),
+                          SizedBox(
+                            height: 50.h,
                           ),
                         ],
                       ),

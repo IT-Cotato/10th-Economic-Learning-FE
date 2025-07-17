@@ -17,6 +17,7 @@ class LevelSelectController extends GetxController {
 
   var conceptName = "개념 학습".obs;
   var learningSetId = 0.obs; // 학습 세트 ID
+  var mode = 'quiz'.obs;
 
   // 실제 완료 여부 저장용
   var levelCompletion = <String, bool>{
@@ -28,24 +29,27 @@ class LevelSelectController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    if (Get.arguments != null) {
-      learningSetId.value = Get.arguments?["learningSetId"] ?? 0;
-      conceptName.value = Get.arguments?["name"] ?? "";
+
+    final args = Get.arguments ?? {};
+    learningSetId.value = args["learningSetId"] ?? 0;
+    conceptName.value = args["name"] ?? "";
+    mode.value = args["mode"] ?? "quiz";
+
+    if (mode.value == 'quiz') {
+      fetchCompletedLevels();
     }
-    fetchCompletedLevels();
   }
 
   Future<void> fetchCompletedLevels() async {
     final data =
         await remoteDataSource.fetchCompletedQuizzes(learningSetId.value);
-    debugPrint("[LevelSelectController] received quiz data: $data"); // ✅ 여기!
+    debugPrint("[LevelSelectController] received quiz data: $data");
 
     levelCompletion['BEGINNER'] = data['beginner'] ?? false;
     levelCompletion['INTERMEDIATE'] = data['intermediate'] ?? false;
     levelCompletion['ADVANCED'] = data['advanced'] ?? false;
 
-    debugPrint(
-        "[LevelSelectController] levelCompletion 상태: $levelCompletion"); // ✅ 여기!
+    debugPrint("[LevelSelectController] levelCompletion 상태: $levelCompletion");
   }
 
   void clickedTestBtn(BuildContext context) {
@@ -55,7 +59,19 @@ class LevelSelectController extends GetxController {
   void clickedQuizBtn(
       BuildContext context, int learningSetId, String name, String level) {
     Get.toNamed(
-      '/learning_list/quiz_level/quiz',
+      '/learning_list/level_select/quiz',
+      arguments: {
+        "learningSetId": learningSetId,
+        "name": name,
+        "level": level,
+      },
+    );
+  }
+
+  void clickedConceptBtn(
+      BuildContext context, int learningSetId, String name, String level) {
+    Get.toNamed(
+      '/learning_list/learning_concept',
       arguments: {
         "learningSetId": learningSetId,
         "name": name,

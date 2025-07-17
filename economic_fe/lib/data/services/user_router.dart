@@ -136,7 +136,7 @@ class UserRouter {
         page: () => const LearningListPage(),
         children: [
           GetPage(
-            name: '/quiz_level',
+            name: '/level_select',
             page: () => const LevelSelectPage(),
             children: [
               GetPage(

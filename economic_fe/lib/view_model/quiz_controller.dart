@@ -18,7 +18,7 @@ class QuizController extends GetxController {
   }
 
   void clickedTestBtn(BuildContext context) {
-    Get.toNamed('/home/learning_list/quiz_level/quiz');
+    Get.toNamed('/home/learning_list/level_select/quiz');
   }
 
   void clickedTestMultiBtn(BuildContext context) {
@@ -121,7 +121,7 @@ class QuizController extends GetxController {
           await remoteDataSource.postQuizFinish(learningSetId, level);
 
       print("response quizFinish isSuccess : ${response['isSuccess']}");
-      Get.toNamed('/learning_list/quiz_level');
+      Get.toNamed('/learning_list/level_select');
       // Navigator.pop(context);
     } catch (e) {
       debugPrint('post quizFinish Error: $e');
