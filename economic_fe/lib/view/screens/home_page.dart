@@ -161,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                             Text(
-                                              'Beginner',
+                                              '초급',
                                               style: TextStyle(
                                                 color: const Color(0xFF404040),
                                                 fontSize: 10.sp,
@@ -216,7 +216,7 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                             Text(
-                                              'Intermediate',
+                                              '중급',
                                               style: TextStyle(
                                                 color: const Color(0xFF404040),
                                                 fontSize: 10.sp,
@@ -270,7 +270,7 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                             Text(
-                                              'Advanced',
+                                              '고급',
                                               style: TextStyle(
                                                 color: const Color(0xFF404040),
                                                 fontSize: 10.sp,
@@ -423,20 +423,38 @@ class _HomePageState extends State<HomePage> {
                     vertical: 8.h,
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '오늘의 퀘스트',
-                        style: TextStyle(
-                          color: const Color(0xFF111111),
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w500,
-                          height: 1.30,
-                          letterSpacing: -0.50,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            '오늘의 퀘스트',
+                            style: TextStyle(
+                              color: const Color(0xFF111111),
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w500,
+                              height: 1.30,
+                              letterSpacing: -0.50,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => _buildToolTip());
+                            },
+                            child: Icon(
+                              Icons.help_outline,
+                              size: 16.sp,
+                              color: const Color.fromARGB(255, 201, 201, 201),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: 8.w,
-                      ),
+
                       // 목표 변경하기 버튼
                       HomeSmallButton(
                         controller: controller,
@@ -990,6 +1008,74 @@ class _HomePageState extends State<HomePage> {
       // 하단바
       bottomNavigationBar: const CustomBottomBar(
         currentIndex: 0,
+      ),
+    );
+  }
+
+  Widget _buildToolTip() {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // 말풍선 박스 본체
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 28, 16, 16),
+            margin: const EdgeInsets.only(top: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 6,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "유저의 레벨과 동일한 개념 학습 및 퀴즈 완료,\n경제 기사 클릭 시 오늘의 퀘스트가 달성돼요!",
+                  style: TextStyle(fontSize: 14.sp, color: Colors.black87),
+                ),
+              ],
+            ),
+          ),
+
+          // 위쪽 태그 타이틀
+          Positioned(
+            left: 16,
+            top: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: Colors.black12),
+              ),
+              child: Text(
+                "오늘의 퀘스트 꿀팁",
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+          ),
+          // 오른쪽 상단 닫기 버튼
+          Positioned(
+            top: 0,
+            right: -4,
+            child: IconButton(
+              icon: Icon(Icons.close, size: 20, color: Colors.grey[700]),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ],
       ),
     );
   }

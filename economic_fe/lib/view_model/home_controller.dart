@@ -11,8 +11,15 @@ class HomeController extends GetxController with WidgetsBindingObserver {
   var currentStreak = 0.obs; // 연속 출석 날짜
   var isLevelTestCompleted = false.obs; // 레벨테스트 완료 여부
 
+  var isClickedToolTip = false.obs; // 툴팁 클릭 여부
+
   // 진도율 가시성 관리 (레벨테스트 진행 여부에 따른 로직으로 수정 필요)
   var isProgressContainerVisible = false.obs;
+
+  // 오늘의 퀘스트 툴팁 클릭
+  void clickToolTip() {
+    isClickedToolTip = true.obs;
+  }
 
   // 레벨테스트 시작 화면으로
   void toLevelTest() {

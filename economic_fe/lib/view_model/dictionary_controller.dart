@@ -20,6 +20,9 @@ class DictionaryController extends GetxController {
   // 데이터 상태
   var dictionaryList = <DictionaryModel>[].obs;
 
+  // 검색 결과 상태
+  var dictionarySearchResult = false.obs;
+
   void getStats() {
     print("Stats initialized!");
   }
@@ -35,6 +38,15 @@ class DictionaryController extends GetxController {
   Future<void> fetchDictionaryInitial(String text, bool type) async {
     resetPaging();
     await fetchDictionaryPage(text, type);
+  }
+
+  /// 키워드 검색 첫 페이지 로딩
+  Future<void> fetchDictionarySearch(String text, bool type) async {
+    resetPaging();
+    await fetchDictionaryPage(text, type);
+    if (dictionaryList.isEmpty) {
+      dictionarySearchResult = true.obs;
+    }
   }
 
   /// 특정 페이지 데이터만 가져오는 메서드 (내부 호출용)

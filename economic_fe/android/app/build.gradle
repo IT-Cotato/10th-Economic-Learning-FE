@@ -23,7 +23,7 @@ if (keyPropertiesFile.exists()) {
 
 android {
     namespace = "com.cotato.ripple"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

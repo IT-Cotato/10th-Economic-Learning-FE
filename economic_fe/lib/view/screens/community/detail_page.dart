@@ -349,6 +349,7 @@ class _DetailPageState extends State<DetailPage> {
                                   minLines: 1,
                                 ),
                               ),
+                              // 댓글 입력 창
                               GestureDetector(
                                 onTap: controller.messageText.value.isNotEmpty
                                     ? (controller.isEditingComment.value

@@ -53,6 +53,13 @@ class ChatbotController extends GetxController {
         isSystemMessage: false,
         time: getCurrentFormattedTime(),
       ),
+      Message(
+        text:
+            '리플의 AI 챗봇을  200% 활용하는 프롬프트 꿀팁\n 1. 명확하고 구체적으로 작성하기\n - 무엇을 원하는지 구체적으로 설명해 보세요!\n - 예시 : "복리를 이해하기 위해, 연 5% 이자율로 3년 동안 100만 원이 어떻게 증가하는지 구체적으로 계산해줘." \n2. 배경 정보 제공하기 \n- 질문이나 질문자의 배경 정보를 알려주세요!\n - 예시 : "경제를 공부하는 대학생인데,\n단리와 복리의 차이를 쉽게 이해할 수 있도록 설명해줘."\n3. 결과물 형식 명시하기\n- 결과물을 어떤 형태로 제공받고 싶은지 알려주세요!\n- 예시 : “단리와 복리의 차이를 표로 정리하고, 간단한 계산 예를 포함해 설명해줘."',
+        isUserMessage: false,
+        isSystemMessage: false,
+        time: getCurrentFormattedTime(),
+      ),
     ]);
   }
 

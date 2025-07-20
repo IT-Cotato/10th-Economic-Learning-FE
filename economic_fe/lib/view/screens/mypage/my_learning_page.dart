@@ -257,27 +257,34 @@ Widget _buildScrapQuizzesTab(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              quiz['learningSetName'] ?? '',
-                              style: TextStyle(
-                                color: const Color(0xFF767676),
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
+                        Flexible(
+                          // 또는 Expanded
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                quiz['learningSetName'] ?? '',
+                                style: TextStyle(
+                                  color: const Color(0xFF767676),
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              quiz['quizName'] ?? '',
-                              style: TextStyle(
-                                color: const Color(0xFF404040),
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w600,
+                              const SizedBox(height: 2),
+                              Text(
+                                (quiz['quizName'] ?? '').length > 20
+                                    ? '${quiz['quizName'].substring(0, 20)}...'
+                                    : (quiz['quizName'] ?? ''),
+                                overflow:
+                                    TextOverflow.ellipsis, // 혹시나 더 넘칠 때 대비
+                                style: TextStyle(
+                                  color: const Color(0xFF404040),
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         GestureDetector(
                           onTap: () {},

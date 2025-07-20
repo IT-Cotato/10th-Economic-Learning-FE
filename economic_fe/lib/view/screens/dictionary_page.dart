@@ -79,7 +79,8 @@ class _DictionaryPageState extends State<DictionaryPage> {
                 onFieldSubmitted: (value) {
                   controller.keyword.value = value;
                   controller.typeValue.value = false;
-                  controller.fetchDictionaryInitial(
+                  controller.dictionarySearchResult.value = false;
+                  controller.fetchDictionarySearch(
                       value, false); // ← 페이징 초기화 포함
                 },
               ),
@@ -163,7 +164,11 @@ class _DictionaryPageState extends State<DictionaryPage> {
                           controller.dictionaryList.isEmpty
                       ? const Center(child: CircularProgressIndicator())
                       : controller.dictionaryList.isEmpty
-                          ? const Center(child: Text("용어 사전 데이터가 없습니다."))
+                          ? Center(
+                              child: controller.dictionarySearchResult.value
+                                  ? const Text("검색어가 존재하지 않습니다.")
+                                  : const Text("용어 사전 데이터가 없습니다."),
+                            )
                           : ListView.builder(
                               itemCount: controller.dictionaryList.length +
                                   (controller.currentPage.value <
