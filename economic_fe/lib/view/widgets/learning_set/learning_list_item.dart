@@ -182,20 +182,20 @@ class _LearningListItemState extends State<LearningListItem> {
             SizedBox(
               height: 8.h,
             ),
-            Container(
-              width: 332.w,
-              height: 58.h,
-              padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 18.h),
-              decoration: ShapeDecoration(
-                color: const Color(0xFFF2F3F5),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            GestureDetector(
+              onTap: () {
+                controller.clickedQuiz(learningSet!.id!, learningSet.name!);
+              },
+              child: Container(
+                width: 332.w,
+                height: 58.h,
+                padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 18.h),
+                decoration: ShapeDecoration(
+                  color: const Color(0xFFF2F3F5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  controller.clickedQuiz(learningSet!.id!, learningSet.name!);
-                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
