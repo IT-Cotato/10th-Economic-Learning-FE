@@ -308,49 +308,13 @@ class _ArticleListPageState extends State<ArticleListPage> {
                                                 ),
                                               ),
                                               SizedBox(height: 6.h),
-                                              Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  // 출판사 이름
-                                                  Text(
-                                                    news.publisher ?? "알 수 없음",
-                                                    style: TextStyle(
-                                                      color: const Color(
-                                                          0xFF767676),
-                                                      fontSize: 12.sp,
-                                                    ),
-                                                  ),
-
-                                                  SizedBox(width: 10.w),
-
-                                                  // 조회수 아이콘 + 텍스트
-                                                  Baseline(
-                                                    baselineType:
-                                                        TextBaseline.alphabetic,
-                                                    baseline: 14.sp,
-                                                    child: Row(
-                                                      children: [
-                                                        const Icon(
-                                                          Icons
-                                                              .remove_red_eye_outlined,
-                                                          size: 16,
-                                                          color:
-                                                              Color(0xFF767676),
-                                                        ),
-                                                        SizedBox(width: 4.w),
-                                                        Text(
-                                                          "${news.views ?? '-'}",
-                                                          style: TextStyle(
-                                                            color: const Color(
-                                                                0xFF767676),
-                                                            fontSize: 12.sp,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
+                                              Text(
+                                                news.publisher ?? "알 수 없음",
+                                                style: TextStyle(
+                                                  color:
+                                                      const Color(0xFF767676),
+                                                  fontSize: 12.sp,
+                                                ),
                                               ),
                                             ],
                                           ),

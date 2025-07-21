@@ -1,2 +1,0 @@
-/Users/jeonsiwon/Documents/코테이토 10기/10th-Economic-Learning-FE/10th-Economic-Learning-FE/economic_fe/android/app/.cxx/Debug/203v4h6h/x86_64/CMakeFiles/edit_cache.dir
-/Users/jeonsiwon/Documents/코테이토 10기/10th-Economic-Learning-FE/10th-Economic-Learning-FE/economic_fe/android/app/.cxx/Debug/203v4h6h/x86_64/CMakeFiles/rebuild_cache.dir
