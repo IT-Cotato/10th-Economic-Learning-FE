@@ -19,18 +19,31 @@ class TestController extends GetxController {
     print("Stats initialized!");
   }
 
+  bool isFromHome = false;
+
+  @override
+  void onInit() {
+    super.onInit();
+    final args = Get.arguments as Map<String, dynamic>?;
+    isFromHome = args?['fromHome'] ?? false;
+  }
+
   void test(BuildContext context) async {
     try {
       final List<QuizModel> quizList = await getLevelTest();
 
-      // 레벨테스트 컨트롤러 초기화
       if (Get.isRegistered<LevelTestTestController>()) {
         final testController = Get.find<LevelTestTestController>();
-        testController.resetTest(); // 진행 데이터 초기화
+        testController.resetTest();
       }
 
-      // 새로운 문제로 이동
-      Get.toNamed('test/test', arguments: quizList);
+      Get.toNamed(
+        'test/test',
+        arguments: {
+          'quizList': quizList,
+          'fromHome': true, // or false, 상황에 따라
+        },
+      );
     } catch (e) {
       Get.snackbar("에러", "퀴즈를 불러오지 못했습니다");
       debugPrint("에러 발생: $e");

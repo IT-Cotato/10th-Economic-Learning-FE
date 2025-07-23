@@ -23,7 +23,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
 
   // 레벨테스트 시작 화면으로
   void toLevelTest() {
-    Get.toNamed('/test');
+    Get.toNamed('/test', arguments: {'fromHome': true});
   }
 
   // 전체 학습 세트 목록 화면으로 전환

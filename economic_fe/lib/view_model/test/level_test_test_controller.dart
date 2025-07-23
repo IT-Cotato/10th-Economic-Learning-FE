@@ -12,6 +12,12 @@ class LevelTestTestController extends GetxController {
   final remoteDataSource = RemoteDataSource();
   LevelTestTestController get to => Get.find();
 
+  bool isFromHome = false;
+
+  void setFromHome(bool value) {
+    isFromHome = value;
+  }
+
   // 레벨테스트 사용자 답
   var levelTestAnswers = <LevelTestAnswerModel>[].obs;
 
@@ -33,19 +39,19 @@ class LevelTestTestController extends GetxController {
     print("Stats initialized!");
   }
 
-  Future<List<QuizModel>> getLevelTest() async {
-    try {
-      print("start");
-      dynamic response = await RemoteDataSource.getLevelTest();
+  // Future<List<QuizModel>> getLevelTest() async {
+  //   try {
+  //     print("start");
+  //     dynamic response = await RemoteDataSource.getLevelTest();
 
-      final data = response as Map<String, dynamic>;
-      final quizList = data['results']['quizList'] as List;
-      return quizList.map((quiz) => QuizModel.fromJson(quiz)).toList();
-    } catch (e) {
-      debugPrint('Error: $e');
-      return [];
-    }
-  }
+  //     final data = response as Map<String, dynamic>;
+  //     final quizList = data['results']['quizList'] as List;
+  //     return quizList.map((quiz) => QuizModel.fromJson(quiz)).toList();
+  //   } catch (e) {
+  //     debugPrint('Error: $e');
+  //     return [];
+  //   }
+  // }
 
   void clickedFinishBtn() async {
     // 아래 형태로 보내면 됨
@@ -72,12 +78,37 @@ class LevelTestTestController extends GetxController {
   // 카카오 로그인
   void clickedToKakao(List<QuizModel> quizList) async {
     final answers = levelTestAnswers.toList();
-    print('[clickedToKakao] 저장 전 answers: $answers');
-
     await LevelTestStorage.saveLevelTestData(answers, quizList);
 
-    print('[clickedToKakao] 저장 완료');
-    Get.toNamed('/login');
+    if (isFromHome) {
+      // 바로 약관 없이 결과 화면으로
+      final anonKeyController = Get.find<AnonymousKeyController>();
+      final anonymousKey = anonKeyController.key;
+
+      try {
+        final response = await remoteDataSource.postLevelTestResult(
+          answersJson: answers.map((e) => e.toJson()).toList(),
+          anonymousKey: anonymousKey,
+        );
+
+        await LevelTestStorage.clear();
+
+        Get.toNamed(
+          '/leveltest_result',
+          arguments: {
+            'response': response,
+            'answer': answers,
+            'quizList': quizList,
+            'fromHome': true,
+          },
+        );
+      } catch (e) {
+        debugPrint("레벨테스트 결과 전송 오류: $e");
+      }
+    } else {
+      // 기존 플로우: 로그인 → 약관 동의 → 결과
+      Get.toNamed('/login');
+    }
   }
 
   void quitLevelTest() {
