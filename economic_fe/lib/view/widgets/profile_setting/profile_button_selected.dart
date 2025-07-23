@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ProfileButtonSelected extends StatefulWidget {
   final double paddingWidth;
   final double paddingHeight;
-  final double height;
   final double fontSize;
   final String text;
 
@@ -15,7 +14,6 @@ class ProfileButtonSelected extends StatefulWidget {
     required this.text,
     required this.paddingWidth,
     required this.paddingHeight,
-    required this.height,
     required this.fontSize,
   });
 
@@ -27,7 +25,6 @@ class _ProfileButtonSelectedState extends State<ProfileButtonSelected> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: ScreenUtils.getHeight(context, widget.height),
       padding: EdgeInsets.symmetric(
           horizontal: ScreenUtils.getWidth(context, widget.paddingWidth),
           vertical: ScreenUtils.getHeight(context, widget.paddingHeight)),
@@ -38,18 +35,17 @@ class _ProfileButtonSelectedState extends State<ProfileButtonSelected> {
           borderRadius: BorderRadius.circular(14),
         ),
       ),
-      child: Center(
-        child: Text(
-          widget.text,
-          style: Palette.pretendard(
-            context,
-            const Color(0xFF111111),
-            widget.fontSize,
-            FontWeight.w500,
-            1.0,
-            -0.4,
-          ),
+      child: Text(
+        widget.text,
+        style: Palette.pretendard(
+          context,
+          const Color(0xFF111111),
+          widget.fontSize,
+          FontWeight.w500,
+          1.0,
+          -0.4,
         ),
+        textAlign: TextAlign.center,
       ),
     );
   }
