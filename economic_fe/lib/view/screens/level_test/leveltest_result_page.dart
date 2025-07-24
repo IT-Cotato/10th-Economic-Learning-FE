@@ -21,6 +21,8 @@ class _LeveltestResultPageState extends State<LeveltestResultPage> {
   late final List<LevelTestAnswerModel> answers;
   late final List<QuizModel> quizList;
 
+  late final bool fromHome;
+
   final levelMap = {
     "BEGINNER": "초급",
     "INTERMEDIATE": "중급",
@@ -36,6 +38,7 @@ class _LeveltestResultPageState extends State<LeveltestResultPage> {
     response = arguments['response'];
     answers = arguments['answer'];
     quizList = arguments['quizList'];
+    fromHome = arguments['fromHome'] ?? false;
   }
 
   @override
@@ -199,7 +202,11 @@ class _LeveltestResultPageState extends State<LeveltestResultPage> {
               text: '학습 시작하기',
               color: Palette.buttonColorBlue,
               onPressed: () {
-                controller.toProfileSetting();
+                if (fromHome) {
+                  Get.offAllNamed('/home'); // 홈으로 바로 이동
+                } else {
+                  controller.toProfileSetting(); // 기존 플로우
+                }
               },
             ),
             SizedBox(height: 34.h),

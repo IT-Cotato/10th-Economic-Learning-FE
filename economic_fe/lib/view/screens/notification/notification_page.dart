@@ -121,8 +121,6 @@ class _NotificationPageState extends State<NotificationPage> {
                               notification.id, notification.postId);
                         },
                         child: Container(
-                          width:
-                              MediaQuery.of(context).size.width, // 가로 크기 제한 추가
                           color: notification.isRead
                               ? const Color(0xFFF3F3F3)
                               : Colors.white,
@@ -176,6 +174,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                           : FontWeight.w500,
                                       height: 1.30,
                                       letterSpacing: -0.40,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   SizedBox(height: 9.h),
@@ -189,15 +188,20 @@ class _NotificationPageState extends State<NotificationPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          '[${notification.postTitle}]',
-                                          style: TextStyle(
-                                            color: const Color(0xFFA2A2A2),
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.30,
-                                            letterSpacing: -0.30,
+                                        Expanded(
+                                          child: Text(
+                                            '[${notification.postTitle}]',
+                                            style: TextStyle(
+                                              color: const Color(0xFFA2A2A2),
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w400,
+                                              height: 1.30,
+                                              letterSpacing: -0.30,
+                                            ),
                                           ),
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
                                         ),
                                         Text(
                                           notification.createdDate,

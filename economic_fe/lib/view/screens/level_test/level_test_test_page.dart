@@ -19,13 +19,18 @@ class LevelTestTestPage extends StatefulWidget {
 
 class _LevelTestTestPageState extends State<LevelTestTestPage> {
   final LevelTestTestController controller = Get.put(LevelTestTestController());
-  late final Map<String, dynamic> args;
   late final List<QuizModel> quizList;
+  late final bool isFromHome;
 
   @override
   void initState() {
     super.initState();
-    quizList = Get.arguments ?? [];
+    final args = Get.arguments as Map<String, dynamic>?;
+
+    quizList = (args?['quizList'] as List<QuizModel>?) ?? [];
+    isFromHome = args?['fromHome'] ?? false;
+
+    controller.setFromHome(isFromHome);
   }
 
   @override
