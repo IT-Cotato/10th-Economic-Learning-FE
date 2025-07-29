@@ -3,6 +3,7 @@ import 'package:economic_fe/data/services/user_router.dart';
 import 'package:economic_fe/data/services/validate_access_token.dart';
 import 'package:economic_fe/utils/notification_utils.dart';
 import 'package:economic_fe/utils/scaffold_messenger_key.dart';
+import 'package:economic_fe/view_model/mypage/mypage_home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,6 +27,8 @@ Future<void> main() async {
   if (isValidToken) {
     await SSEManager().init();
   }
+
+  Get.put(MypageHomeController(), permanent: true);
 
   runApp(RippleApp(
     initialRoute: isValidToken ? '/home' : '/',
