@@ -41,7 +41,7 @@ class TestController extends GetxController {
         'test/test',
         arguments: {
           'quizList': quizList,
-          'fromHome': true, // or false, 상황에 따라
+          'fromHome': isFromHome,
         },
       );
     } catch (e) {

@@ -26,9 +26,8 @@ Future<void> main() async {
   final isValidToken = await validateAccessToken();
   if (isValidToken) {
     await SSEManager().init();
+    Get.put(MypageHomeController(), permanent: true);
   }
-
-  Get.put(MypageHomeController(), permanent: true);
 
   runApp(RippleApp(
     initialRoute: isValidToken ? '/home' : '/',

@@ -15,7 +15,10 @@ class MypageHomePage extends StatefulWidget {
 }
 
 class _MypageHomePageState extends State<MypageHomePage> {
-  final MypageHomeController controller = Get.find();
+  final MypageHomeController controller =
+      Get.isRegistered<MypageHomeController>()
+          ? Get.find()
+          : Get.put(MypageHomeController());
 
   @override
   void initState() {
