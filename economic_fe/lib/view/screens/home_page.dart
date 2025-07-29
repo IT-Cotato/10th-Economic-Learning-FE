@@ -287,21 +287,21 @@ class _HomePageState extends State<HomePage> {
                                 );
                               }),
 
-                              Container(
-                                width: 269.w,
-                                height: 44.h,
-                                decoration: ShapeDecoration(
-                                  color: const Color(0xFF2AD6D6),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                              // 학습 하러 가기 버튼
+                              GestureDetector(
+                                onTap: () {
+                                  // 학습 진행 상황에 따라 다음 화면 반환하는 로직 필요
+                                  controller.navigateToLearningList();
+                                },
+                                child: Container(
+                                  width: 269.w,
+                                  height: 44.h,
+                                  decoration: ShapeDecoration(
+                                    color: const Color(0xFF2AD6D6),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
-                                ),
-                                // 학습 하러 가기 버튼
-                                child: GestureDetector(
-                                  onTap: () {
-                                    // 학습 진행 상황에 따라 다음 화면 반환하는 로직 필요
-                                    controller.navigateToLearningList();
-                                  },
                                   child: Center(
                                     child: Text(
                                       '학습 하러 가기',
