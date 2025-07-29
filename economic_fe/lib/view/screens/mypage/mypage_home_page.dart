@@ -15,14 +15,18 @@ class MypageHomePage extends StatefulWidget {
 }
 
 class _MypageHomePageState extends State<MypageHomePage> {
-  final MypageHomeController controller = Get.put(MypageHomeController());
+  final MypageHomeController controller =
+      Get.isRegistered<MypageHomeController>()
+          ? Get.find()
+          : Get.put(MypageHomeController());
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!controller.isLoading.value) {
+  void initState() {
+    super.initState();
+    // 페이지 진입 시마다 데이터 갱신
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.refreshMypageData();
-    }
+    });
   }
 
   @override

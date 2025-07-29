@@ -53,32 +53,33 @@ class LevelTestTestController extends GetxController {
   //   }
   // }
 
-  void clickedFinishBtn() async {
-    // 아래 형태로 보내면 됨
-    List<Map<String, dynamic>> answersJson =
-        levelTestAnswers.map((e) => e.toJson()).toList();
+  // void clickedFinishBtn() async {
+  //   // 아래 형태로 보내면 됨
+  //   List<Map<String, dynamic>> answersJson =
+  //       levelTestAnswers.map((e) => e.toJson()).toList();
 
-    try {
-      print("start");
+  //   try {
+  //     print("start");
 
-      final anonKeyController = Get.find<AnonymousKeyController>();
-      final anonymousKey = anonKeyController.key;
+  //     final anonKeyController = Get.find<AnonymousKeyController>();
+  //     final anonymousKey = anonKeyController.key;
 
-      dynamic response = await remoteDataSource.postLevelTestResult(
-        answersJson: answersJson,
-        anonymousKey: anonymousKey,
-      );
+  //     dynamic response = await remoteDataSource.postLevelTestResult(
+  //       answersJson: answersJson,
+  //       anonymousKey: anonymousKey,
+  //     );
 
-      print("response : $response");
-    } catch (e) {
-      debugPrint("error : $e");
-    }
-  }
+  //     print("response : $response");
+  //   } catch (e) {
+  //     debugPrint("error : $e");
+  //   }
+  // }
 
   // 카카오 로그인
   void clickedToKakao(List<QuizModel> quizList) async {
     final answers = levelTestAnswers.toList();
     await LevelTestStorage.saveLevelTestData(answers, quizList);
+    debugPrint("isFromHome: $isFromHome");
 
     if (isFromHome) {
       // 바로 약관 없이 결과 화면으로

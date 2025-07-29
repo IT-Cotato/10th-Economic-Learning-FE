@@ -44,8 +44,6 @@ class MypageHomeController extends GetxController {
       }
     } catch (e) {
       debugPrint("fetchUserInfo() 오류 발생: $e");
-    } finally {
-      isLoading.value = false;
     }
   }
 
