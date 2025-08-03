@@ -1,4 +1,5 @@
 import 'package:economic_fe/data/services/remote_data_source.dart';
+import 'package:economic_fe/data/services/sse_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
@@ -24,8 +25,20 @@ class SettingController extends GetxController {
 
     if (success) {
       isToggled.value = newStatus;
+
+      if (newStatus) {
+        // 알림 켜짐 - SSE 구독 시작
+        await SSEManager().init();
+        debugPrint("알림 켜짐 - SSE 구독 시작 성공");
+      } else {
+        // 알림 꺼짐 - SSE 해제 + 서버 구독 해제 요청
+        await SSEManager().dispose();
+        await remoteDataSource.unsubscribeFromNotifications();
+        debugPrint("알림 꺼짐 - SSE 해제 + 서버 구독 해제 요청 성공");
+      }
+      debugPrint("알림 설정 업데이트 완료");
     } else {
-      print("알림 설정 업데이트 실패");
+      debugPrint("알림 설정 업데이트 실패");
     }
 
     isLoading.value = false;

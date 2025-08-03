@@ -1,3 +1,4 @@
+import 'package:economic_fe/data/services/remote_data_source.dart';
 import 'package:economic_fe/data/services/sse_manager.dart';
 import 'package:economic_fe/data/services/user_router.dart';
 import 'package:economic_fe/data/services/validate_access_token.dart';
@@ -23,9 +24,19 @@ Future<void> main() async {
   final nativeAppKey = dotenv.env['NATIVE_APP_KEY']!;
   KakaoSdk.init(nativeAppKey: nativeAppKey);
 
-  final isValidToken = await validateAccessToken();
+  bool isValidToken = await validateAccessToken();
+  bool isAlarmOn = false;
+
   if (isValidToken) {
-    await SSEManager().init();
+    // 사용자 정보에서 알림 설정 확인
+    final remoteDataSource = RemoteDataSource();
+    final userInfo = await remoteDataSource.fetchUserInfo(null);
+
+    isAlarmOn = userInfo["isAlarmOn"] == true;
+    if (isAlarmOn) {
+      await SSEManager().init(); // 알림이 켜져 있을 때만 SSE 연결
+    }
+
     Get.put(MypageHomeController(), permanent: true);
   }
 

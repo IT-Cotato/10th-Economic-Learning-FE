@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:economic_fe/view_model/login/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
@@ -10,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RemoteDataSource {
+  final Dio dio = Dio();
   //기본 api 엔드포인트
   static String baseUrl = dotenv.env['API_URL']!;
 
@@ -2670,6 +2672,34 @@ class RemoteDataSource {
       print("SSE 구독 실패: $e");
       print(st);
       return null;
+    }
+  }
+
+  /// 알림 구독 해제
+  /// api: api/v1/notification/unsubscribe
+  Future<bool> unsubscribeFromNotifications() async {
+    final access = await getToken("accessToken");
+    if (access == null) {
+      print("알림 해제 실패: 액세스 토큰 없음");
+      return false;
+    }
+
+    try {
+      final response = await dio.post(
+        '$baseUrl/api/v1/notification/unsubscribe',
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $access",
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+
+      print("알림 구독 해제 응답: ${response.statusCode} / ${response.data}");
+      return response.statusCode == 200;
+    } catch (e) {
+      print("알림 구독 해제 실패: $e");
+      return false;
     }
   }
 
