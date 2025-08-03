@@ -1,4 +1,5 @@
 import 'package:economic_fe/data/services/remote_data_source.dart';
+import 'package:economic_fe/data/services/sse_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
@@ -6,8 +7,14 @@ import 'package:get/get.dart';
 class SettingController extends GetxController {
   final RemoteDataSource remoteDataSource = RemoteDataSource();
 
-  var isToggled = true.obs;
+  var isToggled = false.obs;
   var isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchInitialAlarmStatus(); // 화면 진입 시 알림 설정 상태 반영
+  }
 
   Future<void> toggle() async {
     if (isLoading.value) return;
@@ -18,8 +25,20 @@ class SettingController extends GetxController {
 
     if (success) {
       isToggled.value = newStatus;
+
+      if (newStatus) {
+        // 알림 켜짐 - SSE 구독 시작
+        await SSEManager().init();
+        debugPrint("알림 켜짐 - SSE 구독 시작 성공");
+      } else {
+        // 알림 꺼짐 - SSE 해제 + 서버 구독 해제 요청
+        await SSEManager().dispose();
+        await remoteDataSource.unsubscribeFromNotifications();
+        debugPrint("알림 꺼짐 - SSE 해제 + 서버 구독 해제 요청 성공");
+      }
+      debugPrint("알림 설정 업데이트 완료");
     } else {
-      print("알림 설정 업데이트 실패");
+      debugPrint("알림 설정 업데이트 실패");
     }
 
     isLoading.value = false;
@@ -69,5 +88,19 @@ class SettingController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  /// 알림 설정 상태 받아오기
+  Future<void> fetchInitialAlarmStatus() async {
+    isLoading.value = true;
+
+    final userInfo = await remoteDataSource.fetchUserInfo(null);
+    if (userInfo.containsKey("isAlarmOn")) {
+      isToggled.value = userInfo["isAlarmOn"] == true;
+    } else {
+      debugPrint("isAlarmOn 필드가 존재하지 않음");
+    }
+
+    isLoading.value = false;
   }
 }
