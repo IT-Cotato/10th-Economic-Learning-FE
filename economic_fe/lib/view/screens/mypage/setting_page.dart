@@ -38,13 +38,14 @@ class _SettingPageState extends State<SettingPage> {
                 children: [
                   const CategoryText(text: '알림'),
                   Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                     return CategoryOptions(
                       text: '전체 알림',
-                      onTap: controller.isLoading.value
-                          ? () {}
-                          : () {
-                              controller.toggle();
-                            },
+                      onTap: controller.toggle,
                       isToggle: true,
                       isToggleOn: controller.isToggled.value,
                     );

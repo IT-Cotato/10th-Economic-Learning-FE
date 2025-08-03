@@ -6,8 +6,14 @@ import 'package:get/get.dart';
 class SettingController extends GetxController {
   final RemoteDataSource remoteDataSource = RemoteDataSource();
 
-  var isToggled = true.obs;
+  var isToggled = false.obs;
   var isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchInitialAlarmStatus(); // 화면 진입 시 알림 설정 상태 반영
+  }
 
   Future<void> toggle() async {
     if (isLoading.value) return;
@@ -69,5 +75,19 @@ class SettingController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  /// 알림 설정 상태 받아오기
+  Future<void> fetchInitialAlarmStatus() async {
+    isLoading.value = true;
+
+    final userInfo = await remoteDataSource.fetchUserInfo(null);
+    if (userInfo.containsKey("isAlarmOn")) {
+      isToggled.value = userInfo["isAlarmOn"] == true;
+    } else {
+      debugPrint("isAlarmOn 필드가 존재하지 않음");
+    }
+
+    isLoading.value = false;
   }
 }
