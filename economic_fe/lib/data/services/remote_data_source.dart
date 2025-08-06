@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RemoteDataSource {
@@ -1223,24 +1225,85 @@ class RemoteDataSource {
     String apiUrl = '$baseUrl/api/v1/image';
     String? access = await getToken("accessToken");
 
-    var request = http.MultipartRequest('POST', Uri.parse(apiUrl))
-      ..headers['Authorization'] = 'Bearer $access'
-      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+    // 업로드 전 파일 크기 로그 (MB 단위)
+    final sizeInMB =
+        (imageFile.lengthSync() / (1024 * 1024)).toStringAsFixed(2);
+    debugPrint(
+        "[${Platform.isIOS ? "iOS" : "Android"}] 업로드 전 원본 파일 크기: ${sizeInMB}MB");
 
     try {
+      // 1. 임시 저장소 경로 가져오기
+      final dir = await getTemporaryDirectory();
+      final targetPath =
+          '${dir.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      // 2. 이미지 압축
+      File? compressedFile = await _compressImage(imageFile, targetPath);
+
+      // 압축 실패 시 원본 사용
+      final fileToUpload = compressedFile ?? imageFile;
+
+      // 3. MultipartRequest 생성
+      var request = http.MultipartRequest('POST', Uri.parse(apiUrl))
+        ..headers['Authorization'] = 'Bearer $access'
+        ..files
+            .add(await http.MultipartFile.fromPath('file', fileToUpload.path));
+
       var response = await request.send();
+
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
         var jsonResponse = jsonDecode(responseBody);
         if (jsonResponse['isSuccess']) {
-          return jsonResponse['results']['imageId']; // imageId 반환
+          return jsonResponse['results']['imageId'];
         }
       }
       debugPrint('이미지 업로드 실패: ${response.statusCode}');
     } catch (e) {
       debugPrint('이미지 업로드 중 예외 발생: $e');
     }
-    return null; // 실패 시 null 반환
+    return null;
+  }
+
+  /// 이미지 압축 함수
+  Future<File?> _compressImage(File file, String targetPath) async {
+    try {
+      // 1차 압축
+      File? compressed = await _compress(file, targetPath,
+          quality: 60, width: 1080, height: 1080);
+
+      if (compressed == null) return null;
+
+      // 용량 체크
+      int fileSizeInBytes = compressed.lengthSync();
+      double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+      debugPrint("압축 후 용량: ${fileSizeInMB.toStringAsFixed(2)}MB");
+
+      // 5MB 초과하면 추가 압축
+      if (fileSizeInMB > 5) {
+        compressed = await _compress(compressed, targetPath,
+            quality: 40, width: 800, height: 800);
+        debugPrint(
+            "재압축 후 용량: ${(compressed?.lengthSync() ?? 0) / (1024 * 1024)}MB");
+      }
+
+      return compressed;
+    } catch (e) {
+      debugPrint('이미지 압축 실패: $e');
+      return null;
+    }
+  }
+
+  Future<File?> _compress(File file, String targetPath,
+      {required int quality, required int width, required int height}) async {
+    final xfile = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: quality,
+      minWidth: width,
+      minHeight: height,
+    );
+    return xfile != null ? File(xfile.path) : null;
   }
 
   /// 이미지 삭제 API
@@ -2068,12 +2131,39 @@ class RemoteDataSource {
     String apiUrl = '$baseUrl/api/v1/image/profile';
     String? access = await getToken("accessToken");
 
-    var request = http.MultipartRequest('POST', Uri.parse(apiUrl))
-      ..headers['Authorization'] = 'Bearer $access'
-      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
-
     try {
+      // 원본 용량 로그
+      final originalSizeMB =
+          (imageFile.lengthSync() / (1024 * 1024)).toStringAsFixed(2);
+      debugPrint("원본 이미지 크기: ${originalSizeMB}MB");
+
+      // 임시 저장소 경로
+      final dir = await getTemporaryDirectory();
+      final targetPath =
+          '${dir.path}/profile_compressed_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      // 압축
+      File? compressedFile = await _compressImage(
+        imageFile,
+        targetPath,
+      );
+
+      // 압축 실패 시 원본 사용
+      final fileToUpload = compressedFile ?? imageFile;
+
+      // 압축 후 용량 로그
+      final compressedSizeMB =
+          (fileToUpload.lengthSync() / (1024 * 1024)).toStringAsFixed(2);
+      debugPrint("업로드 이미지 크기: ${compressedSizeMB}MB");
+
+      // 업로드 요청
+      var request = http.MultipartRequest('POST', Uri.parse(apiUrl))
+        ..headers['Authorization'] = 'Bearer $access'
+        ..files
+            .add(await http.MultipartFile.fromPath('file', fileToUpload.path));
+
       var response = await request.send();
+
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
         var jsonResponse = jsonDecode(responseBody);
