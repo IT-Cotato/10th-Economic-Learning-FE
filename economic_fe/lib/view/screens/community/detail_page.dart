@@ -338,6 +338,7 @@ class _DetailPageState extends State<DetailPage> {
                             children: [
                               Expanded(
                                 child: TextField(
+                                  focusNode: controller.inputFocusNode,
                                   controller: controller.messageController,
                                   onChanged: (value) =>
                                       controller.updateMessage(value),

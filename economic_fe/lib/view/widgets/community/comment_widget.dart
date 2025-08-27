@@ -119,14 +119,15 @@ class _CommentWidgetState extends State<CommentWidget> {
                           const Spacer(),
 
                           // 더보기 버튼 (수정/삭제/신고)
-                          GestureDetector(
-                            onTap: () {
-                              _handleOptions(
-                                  context, widget.isAuthor, widget.isReply);
-                            },
-                            child: Icon(Icons.more_horiz,
-                                size: 20.w, color: Colors.grey),
-                          ),
+                          if (!widget.comment.isDeleted)
+                            GestureDetector(
+                              onTap: () {
+                                _handleOptions(
+                                    context, widget.isAuthor, widget.isReply);
+                              },
+                              child: Icon(Icons.more_horiz,
+                                  size: 20.w, color: Colors.grey),
+                            ),
                         ],
                       ),
                       SizedBox(height: 10.h),
@@ -154,26 +155,41 @@ class _CommentWidgetState extends State<CommentWidget> {
                           // 좋아요 수
                           Padding(
                             padding: EdgeInsets.only(right: 5.w),
-                            child: GestureDetector(
-                              onTap: () {
-                                widget.isTalk!
-                                    ? talkController
-                                        .likeCommentToggle(widget.comment.id)
-                                    : controller
-                                        .likeCommentToggle(widget.comment.id);
-                              },
-                              child: Icon(
-                                widget.comment.isLiked
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                size: 18,
-                                color: widget.comment.isLiked
-                                    ? Palette.buttonColorBlue
-                                    : Colors.grey,
-                              ),
+                            child: widget.comment.isDeleted
+                                ? Icon(
+                                    widget.comment.isLiked
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    size: 18,
+                                    color: Colors.grey.shade300,
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      widget.isTalk!
+                                          ? talkController.likeCommentToggle(
+                                              widget.comment.id)
+                                          : controller.likeCommentToggle(
+                                              widget.comment.id);
+                                    },
+                                    child: Icon(
+                                      widget.comment.isLiked
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      size: 18,
+                                      color: widget.comment.isLiked
+                                          ? Palette.buttonColorBlue
+                                          : Colors.grey,
+                                    ),
+                                  ),
+                          ),
+                          Text(
+                            "${widget.comment.likes}",
+                            style: TextStyle(
+                              color: widget.comment.isDeleted
+                                  ? Colors.grey.shade400
+                                  : null,
                             ),
                           ),
-                          Text("${widget.comment.likes}"),
 
                           // 답글 버튼
                           if (!widget.isReply) ...[
