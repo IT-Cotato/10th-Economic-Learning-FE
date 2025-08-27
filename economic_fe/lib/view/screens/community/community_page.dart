@@ -1,3 +1,4 @@
+import 'package:economic_fe/main.dart';
 import 'package:economic_fe/view/theme/palette.dart';
 import 'package:economic_fe/view/widgets/category_tab.dart';
 import 'package:economic_fe/view/widgets/custom_bottom_bar.dart';
@@ -15,7 +16,7 @@ class CommunityPage extends StatefulWidget {
   State<CommunityPage> createState() => _CommunityPageState();
 }
 
-class _CommunityPageState extends State<CommunityPage> {
+class _CommunityPageState extends State<CommunityPage> with RouteAware {
   final CommunityController controller = Get.put(CommunityController());
   int dayCounts = 3;
 
@@ -41,10 +42,34 @@ class _CommunityPageState extends State<CommunityPage> {
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.fetchPosts();
-      controller.fetchTokPosts();
-      controller.fetchTodaysTok();
+      _loadInitialData();
     });
+  }
+
+  void _loadInitialData() {
+    controller.fetchPosts();
+    controller.fetchTokPosts();
+    controller.fetchTodaysTok();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)! as PageRoute);
+  }
+
+  /// 다른 페이지에서 돌아올 때 실행
+  @override
+  void didPopNext() {
+    _loadInitialData();
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    _postScrollController.dispose();
+    _tokScrollController.dispose();
+    super.dispose();
   }
 
   @override

@@ -18,10 +18,11 @@ class SelectableButtonWrap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final JobSelectController jobController = Get.find();
-    final PartSelectController partController = Get.find();
+    final JobSelectController? jobController =
+        subject == 'job' ? Get.find<JobSelectController>() : null;
+    final PartSelectController? partController =
+        subject == 'part' ? Get.find<PartSelectController>() : null;
 
-    // 업종인지 직무인지 판단
     final bool isJob = subject == 'job';
     final List<String> itemList = isJob
         ? [
@@ -48,17 +49,17 @@ class SelectableButtonWrap extends StatelessWidget {
       runSpacing: 12.h,
       children: itemList.map((label) {
         final bool isSelected = isJob
-            ? jobController.selectedJob.value == label
-            : partController.selectedPart.value == label;
+            ? jobController!.selectedJob.value == label
+            : partController!.selectedPart.value == label;
 
         return GestureDetector(
           onTap: () => isJob
-              ? jobController.selectJob(label)
-              : partController.selectPart(label),
+              ? jobController!.selectJob(label)
+              : partController!.selectPart(label),
           child: Obx(() {
             final bool selected = isJob
-                ? jobController.selectedJob.value == label
-                : partController.selectedPart.value == label;
+                ? jobController!.selectedJob.value == label
+                : partController!.selectedPart.value == label;
 
             return selected
                 ? ProfileButtonSelected(

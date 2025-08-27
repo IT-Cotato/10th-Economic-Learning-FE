@@ -94,7 +94,11 @@ class TestController extends GetxController {
   }
 
   void clickedAfterBtn() {
-    Get.toNamed('/login/skip');
+    if (isFromHome) {
+      Get.toNamed('/home');
+    } else {
+      Get.toNamed('/login/skip');
+    }
   }
 
   Future<List<QuizModel>> getLevelTest() async {

@@ -13,6 +13,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('ko', null);
@@ -77,6 +79,7 @@ class RippleApp extends StatelessWidget {
                 child: widget!,
               );
             },
+            navigatorObservers: [routeObserver],
           ),
         );
       },
